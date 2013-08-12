@@ -11,6 +11,7 @@ public class FileUtil {
 	private static final String FILE = "\"file\": ";
 	private static final String ID = "\"id\": ";
 	private static final String CLOBBERS = "\"clobbers\": [\n";
+	private static final String MERGES = "\"merges\": [\n";
 	private static final String PLUGIN_XML = "plugin.xml";
 	private static final String BEGINING = "cordova.define('cordova/plugin_list', function(require, exports, module) { \n module.exports = [\n";
 	private static final String END = "]\n});";
@@ -38,12 +39,18 @@ public class FileUtil {
 			pluginContent += "\n\t{\n";
 			pluginContent += "\t\t" + FILE + "\"" + plugin.getFile() + "\",\n";
 			pluginContent += "\t\t" + ID + "\"" + plugin.getId() + "\",\n";
-			pluginContent += "\t\t" + CLOBBERS;
-			Iterator<String> clobberIterator = plugin.getClobbers().iterator();
-			while (clobberIterator.hasNext()) {
-				String clobber = clobberIterator.next();
+			Iterator<String> mapperIterator = null;
+			if (plugin.getClobbers().size() > 0) {
+				pluginContent += "\t\t" + CLOBBERS;
+				mapperIterator = plugin.getClobbers().iterator();
+			} else if (plugin.getMerges().size() > 0) {
+				pluginContent += "\t\t" + MERGES;
+				mapperIterator = plugin.getMerges().iterator();
+			}
+			while (mapperIterator.hasNext()) {
+				String clobber = mapperIterator.next();
 				pluginContent += "\t\t\t\"" + clobber + "\"";
-				if (clobberIterator.hasNext()) {
+				if (mapperIterator.hasNext()) {
 					pluginContent += ",\n";
 				} else {
 					pluginContent += "\n\t\t]";

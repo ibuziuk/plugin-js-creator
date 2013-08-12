@@ -6,11 +6,13 @@ public class Plugin {
 	private String file;
 	private String id;
 	private List<String> clobbers;
+	private List<String> merges;
 
-	public Plugin(String file, String id, List<String> clobbers) {
+	public Plugin(String file, String id, List<String> clobbers, List<String> merges) {
 		this.file = file;
 		this.id = id;
 		this.clobbers = clobbers;
+		this.merges = merges;
 	}
 
 	public String getFile() {
@@ -25,8 +27,12 @@ public class Plugin {
 		return clobbers;
 	}
 
+	public List<String> getMerges() {
+		return merges;
+	}
+
 	@Override
 	public String toString() {
-		return file + ", " + id + ", " + clobbers.toString();
+		return file + ", " + id + ", " + merges.toString();
 	}
 }
