@@ -35,4 +35,5 @@ public class Plugin {
 	public String toString() {
 		return file + ", " + id + ", " + merges.toString();
 	}
+
 }
