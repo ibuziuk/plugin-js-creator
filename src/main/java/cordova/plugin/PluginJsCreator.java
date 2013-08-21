@@ -14,7 +14,7 @@ import org.xml.sax.SAXException;
 
 import cordova.plugin.exception.PluginJsException;
 import cordova.plugin.model.Plugin;
-import cordova.plugin.util.DomUtil;
+import cordova.plugin.util.CordovaPluginXmlUtil;
 import cordova.plugin.util.FileUtil;
 
 public class PluginJsCreator {
@@ -29,7 +29,7 @@ public class PluginJsCreator {
 				DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				Document doc = dBuilder.parse(file);
 				doc.getDocumentElement().normalize();
-				List<Plugin> pluginsFromDocument = DomUtil.getPluginsFromDocument(doc);
+				List<Plugin> pluginsFromDocument = CordovaPluginXmlUtil.getPluginsFromDocument(doc);
 				allPlugins.addAll(pluginsFromDocument);
 			} catch (ParserConfigurationException e) {
 				throw new PluginJsException(e);
