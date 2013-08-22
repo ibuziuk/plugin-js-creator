@@ -45,5 +45,5 @@ public class PluginJsCreator {
 		System.out.println("------------------");
 		System.out.println("Time consumption: " + (stop - start));
 	}
-	
+
 }
