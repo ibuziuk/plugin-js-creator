@@ -7,7 +7,7 @@ import java.util.List;
 
 import cordova.plugin.model.Plugin;
 
-public class FileUtil {
+public class CordovaFileUtil {
 	private static final String FILE = "\"file\": ";
 	private static final String ID = "\"id\": ";
 	private static final String CLOBBERS = "\"clobbers\": [\n";
