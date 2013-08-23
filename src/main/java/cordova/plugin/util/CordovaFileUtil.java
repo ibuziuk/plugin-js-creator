@@ -1,21 +1,43 @@
+/*******************************************************************************
+ * Copyright (c) 2007-2013 Red Hat, Inc.
+ * Distributed under license by Red Hat, Inc. All rights reserved.
+ * This program is made available under the terms of the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributor:
+ *     Red Hat, Inc. - initial API and implementation
+ ******************************************************************************/
 package cordova.plugin.util;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 import cordova.plugin.model.Plugin;
 
+/**
+ * @author Ilya Buziuk (ibuziuk)
+ */
 public class CordovaFileUtil {
-	private static final String FILE = "\"file\": ";
-	private static final String ID = "\"id\": ";
 	private static final String CLOBBERS = "\"clobbers\": [\n";
+	private static final String CORDOVA_PLUGINS_JS_BEGINNING = "cordova.define('cordova/plugin_list', function(require, exports, module) { \n module.exports = [\n";
+	private static final String CORDOVA_PLUGINS_JS_END = "]\n});";
+	private static final String CORDOVA_DEFINE = "cordova.define(";
+	private static final String ID = "\"id\": ";
 	private static final String MERGES = "\"merges\": [\n";
 	private static final String PLUGIN_XML = "plugin.xml";
-	private static final String BEGINING = "cordova.define('cordova/plugin_list', function(require, exports, module) { \n module.exports = [\n";
-	private static final String END = "]\n});";
+	private static final String FILE = "\"file\": ";
+	private static final String FUNCTION_BEGINNING = "function(require, exports, module) {\n";
+	private static final String FUNCTION_END = "});";
 
+	
+	/**
+	 * Returns {@link List} of plugin.xml files from the "plugins" directory of the hybrid project
+	 */
 	public static List<File> getPluginXmlFiles(File pluginsDir) {
 		List<File> pluginXmlFiles = new ArrayList<File>();
 		File[] pluginDirs = pluginsDir.listFiles();
@@ -31,7 +53,12 @@ public class CordovaFileUtil {
 		return pluginXmlFiles;
 	}
 
-	public static String generateContent(List<Plugin> plugins) {
+	/**
+	 * Returns {@link String} representation of the cordova_plugins.js 
+	 * 
+	 * @param plugins {@link List} of cordova {@link Plugin}
+	 */
+	public static String generateCordovaPluginsJsContent(List<Plugin> plugins) {
 		String pluginContent = "";
 		Iterator<Plugin> pluginIterator = plugins.iterator();
 		while (pluginIterator.hasNext()) {
@@ -62,7 +89,23 @@ public class CordovaFileUtil {
 				pluginContent += "\n\t}\n";
 			}
 		}
-		return BEGINING + pluginContent + END;
+		
+		return CORDOVA_PLUGINS_JS_BEGINNING + pluginContent + CORDOVA_PLUGINS_JS_END;
+	}
+	
+	
+	/** 
+	 * Wraps the plugin's  .js file content in a function 
+	 * (adds "cordova.define( pluginId, function(require, exports, module) {...} ) 
+	 */
+	public static String generatePluginContent(File file, String pluginId) throws FileNotFoundException {
+		String content = null;
+		if (file.exists()) {
+			String fileContent = new Scanner(file).useDelimiter("\\A").next();
+			content = CORDOVA_DEFINE + '"' + pluginId + '"' + ", " + FUNCTION_BEGINNING + fileContent + FUNCTION_END;
+		}
+		
+		return content;
 	}
 
 }

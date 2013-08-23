@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2007-2013 Red Hat, Inc.
+ * Distributed under license by Red Hat, Inc. All rights reserved.
+ * This program is made available under the terms of the
+ * Eclipse Public License v1.0 which accompanies this distribution,
+ * and is available at http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributor:
+ *     Red Hat, Inc. - initial API and implementation
+ ******************************************************************************/
 package cordova.plugin.util;
 
 import java.io.File;
@@ -35,12 +45,15 @@ public class CordovaPluginXmlUtil {
 	private static final String TAG_JS_MODULE = "js-module";
 	private static final String TAG_MERGES = "merges";
 	private static final String TAG_PLATFORM = "platform";
-
-	public static List<Plugin> getPluginsFromDocument(Document doc, String platformName) {
+	
+	/**
+	 * Returns a {@link List} of all plugins for the specific platform from the {@link Document} of the plugin.xml 
+	 */
+	public static List<Plugin> getPluginsFromDocument(Document document, String platformName) {
 		List<Plugin> plugins = new ArrayList<Plugin>();
-		String pluginXmlId = getPluginXmlId(doc); // plugin.xml id, not plugin id
+		String pluginXmlId = getPluginXmlId(document); // plugin.xml id, not plugin id
 
-		List<Element> suitableJsModules = getJsModulesForSpecificPlatform(doc, platformName);
+		List<Element> suitableJsModules = getJsModulesForSpecificPlatform(document, platformName);
 		Iterator<Element> iterator = suitableJsModules.iterator();
 
 		while (iterator.hasNext()) {
@@ -54,6 +67,9 @@ public class CordovaPluginXmlUtil {
 		return plugins;
 	}
 
+	/** 
+	 *  Returns a {@link List} of all plugins for the specific platfom from the {@link List} of plugin.xml files
+	 */
 	public static List<Plugin> getPluginsfromFiles(List<File> pluginXmlFiles, String platformName)
 			throws PluginJsException {
 		List<Plugin> allPlugins = new ArrayList<Plugin>();
